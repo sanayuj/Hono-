@@ -2,7 +2,10 @@ import { Hono } from "hono";
 import { serve } from "@hono/node-server";
 import { v4 as uuidv4 } from "uuid";
 import { stream, streamText, streamSSE } from 'hono/streaming'
+import dbConnection from "./Models/dbConnect"
 const app = new Hono();
+
+dbConnection()
 
 const videos=[]
 
@@ -33,7 +36,7 @@ app.get("/videos",(c)=>{
 
 app.get("/video/:id",(c)=>{
     const {id}=c.req.param()
-    const video=video.find((video)=>video.id===id)
+    const video=videos.find((video)=>video.id===id)
     if(!video){
         return c.json({message:"Video not founded"})
     }
