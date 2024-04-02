@@ -30,6 +30,16 @@ app.get("/videos",(c)=>{
     })
 })
 
+
+app.get("/video/:id",(c)=>{
+    const {id}=c.req.param()
+    const video=video.find((video)=>video.id===id)
+    if(!video){
+        return c.json({message:"Video not founded"})
+    }
+    return c.json({message:"Video founded",video})
+})
+
 const port = 4000;
 console.log(`Server is running on port ${port}`);
 
