@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { serve } from "@hono/node-server";
 import { v4 as uuidv4 } from "uuid";
+import { stream, streamText, streamSSE } from 'hono/streaming'
 const app = new Hono();
 
 const videos=[]
@@ -21,7 +22,13 @@ app.post("/video", async (c) => {
   return c.json(videoContent)
 });
 
-console.log(videos);
+app.get("/videos",(c)=>{
+    return streamText(c,async(stream)=>{
+        for(const video of videos){
+            await stream.writeln(JSON.stringify(video))
+        }
+    })
+})
 
 const port = 4000;
 console.log(`Server is running on port ${port}`);
